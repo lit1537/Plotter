@@ -1,0 +1,117 @@
+#include <Servo.h> 
+Servo servo; 
+#include <Stepper_28BYJ.h>  
+#define STEPS 4078 
+Stepper_28BYJ stepperl(STEPS, 8, 9, 10, 11); 
+Stepper_28BYJ stepperr(STEPS, 4, 5, 6, 7); 
+int xPin = 3;
+int yPin = 2;
+
+int xPosition = 0;
+int yPosition = 0;
+int buttonState = 0;
+float x1=275; 
+float y1=180; 
+float x0=0; 
+float y0=0; 
+float k=1000/8; 
+float c=565; 
+int marker;
+void baba(float x,float y,float a){ 
+float m=y-y0; 
+float n=x-x0; 
+if(a==1){ 
+servo.write(90); 
+} 
+if(a==0){ 
+servo.write(120); 
+}
+if((m==0)&&(n!=0)){
+stepperl.step(n*k);
+x=x0;
+y=y0;
+}
+if((m!=0)&&(n==0)){
+stepperr.step(m*k);
+x=x0;
+y=y0;
+}
+if((m!=0)&&(n!=0)){
+ while((x!=x0)&&(y!=y0)){ 
+stepperl.step(0.5*k); 
+stepperr.step(0.5*k); 
+x0+=0.5; 
+y0+=0.5; 
+} 
+}
+}
+void setup() 
+{ 
+Serial.begin(9600);
+servo.attach(13); 
+pinMode(12, INPUT_PULLUP);
+stepperl.setSpeed(17); 
+stepperr.setSpeed(17); 
+Serial.begin(9600); 
+} 
+void loop(){
+
+while(digitalRead(12)==1){
+xPosition = analogRead(xPin);
+yPosition = analogRead(yPin);
+if(xPosition>600){
+  baba(0,-1,0);
+}
+if(xPosition<400){
+  baba(0,1,0);
+}
+if(yPosition<300){
+  baba(-1,0,0);
+}
+if(yPosition>700){
+  baba(1,0,0);
+}
+}
+
+
+ 
+  baba(0,-4,1);
+  baba(-4,0,1);
+  baba(0,4,1);
+  baba(4,0,1);
+  baba(0,15,1);
+  baba(10,0,1);
+  baba(0,-7,1);
+  baba(0,-4,1);
+  baba(-4,0,1);
+  baba(0,4,1);
+  baba(4,0,1);
+  baba(0,24,1);
+  baba(-20,0,1);
+  baba(0,4,1);
+  baba(-4,0,1);
+  baba(0,-4,1);
+  baba(4,0,1);
+  baba(40,0,1);
+  baba(0,10,1);
+  baba(0,4,1);
+  baba(-4,0,1);
+  baba(0,-4,1);
+  baba(4,0,1);
+  baba(0,-15,1);
+  baba(6,0,1);
+  baba(0,-6,1);
+  baba(0,-4,1);
+  baba(-4,0,1);
+  baba(0,4,1);
+  baba(4,0,1);
+  baba(0,21,1);
+  baba(-7,0,1);
+  baba(15,0,1);
+  baba(4,0,1);
+  baba(0,4,1);
+  baba(-4,0,1);
+  baba(0,-4,1);
+  baba(0,-15,1);
+  baba(-10,0,1);
+}
